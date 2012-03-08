@@ -1,0 +1,29 @@
+//var exec = require("child_process").exec;
+var querystring = require("querystring");
+
+function init(response, postData) {
+    response.writeHead(200, {"Content-Type": "text/plain"});
+    response.write("Welcome to Nodomoro!!");
+    response.end();
+}
+
+function sendPomodoro(response, postData) {
+  
+  /*è molto importante gestire tutte le operazioni di I/O come questa (o connessione a DB)
+  in maniera asincrona. Ricondati che Node è single thread e quindi se non si utilizzano
+  queste tecniche si potrebbero verificare delle situazioni di malfunzionamento (dovuto ad istruzioni di blocking)
+  vedi http://www.nodebeginner.org/#routing-to-real-request-handlers*/
+    
+    var pomodoroData = querystring.parse(postData);
+    console.log("Progetto: " + pomodoroData["id_progetto"]);
+    console.log("Descrizione attività: " + pomodoroData["descrizione_attivita"]);
+    console.log("Data: " + pomodoroData["data"]);
+    console.log("Utente: " + pomodoroData["utente"]);
+    response.writeHead(200, {"Content-Type": "text/plain"});
+    response.write("Pomodoro registrato!!");
+    response.end();
+
+
+}
+exports.init = init;
+exports.sendPomodoro = sendPomodoro;
