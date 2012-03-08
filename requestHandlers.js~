@@ -13,7 +13,7 @@ function sendPomodoro(response, postData) {
   in maniera asincrona. Ricondati che Node è single thread e quindi se non si utilizzano
   queste tecniche si potrebbero verificare delle situazioni di malfunzionamento (dovuto ad istruzioni di blocking)
   vedi http://www.nodebeginner.org/#routing-to-real-request-handlers*/
-
+    console.log("XXXXXXXXXXXXXXXXXXXX:"+postData);
     var pomodoroData = querystring.parse(postData);
     console.log("Progetto: " + pomodoroData["id_progetto"]);
     console.log("Descrizione attività: " + pomodoroData["descrizione_attivita"]);
