@@ -8,20 +8,20 @@ function createTask(params){
         }
     }
 
-    var creationTimeStamp = 0;
-    var id = 0;
+    var _creationTimeStamp = 0;
+    var _id = 0;
 
     
     var setCreationTimeStamp = function(){
-        creationTimeStamp =  params.dateTime.now();
+        _creationTimeStamp =  params.dateTime.now();
     }
 
     var setUniqueId = function(){
-        id =  params.uniqueIdGenerator.getId();
+        _id =  params.uniqueIdGenerator.getId();
     }
     
     var wasBorn =  function(){
-        return creationTimeStamp;
+        return _creationTimeStamp;
     }
 
     var init = function(){
