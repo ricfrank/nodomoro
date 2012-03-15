@@ -24,6 +24,17 @@ function wru(wru){var assert=wru.assert,async=wru.async,log=wru.log;
         return dateTime;
     }
 
+    var createMockUniqueIdGenerator = function(){
+        var currentId = 0;
+        var generator = {
+            getId : function(){
+                currentId += 1;
+                return currentId;
+            }
+        }
+        return generator;
+    }
+
 wru.test([
     {
         name: "Can't create task without userId",
@@ -41,25 +52,27 @@ wru.test([
         }
     },
     {
-        name: "Task shoud be created with userId and dateTime object",
+        name: "Task shoud be created with userId and dateTime object and unique generator",
         test: function () {
             canCreateWithParams(
                 {
                     userId:"1234",
-                    dateTime: createMockDateTime(1234)
+                    dateTime: createMockDateTime(1234),
+                    uniqueIdGenerator: createMockUniqueIdGenerator()
                 }
             );
             
         }
     },
     {
-        name: "Task can be created with description",
+        name: "Task can be created with an optional description",
         test: function () {
             canCreateWithParams(
                 {
                     userId:"1123323",
                     dateTime:createMockDateTime(1234),
-                    description:"Bla bla bla"
+                    description:"Bla bla bla",
+                    uniqueIdGenerator: createMockUniqueIdGenerator()
                 }
             );
             
@@ -72,7 +85,8 @@ wru.test([
             var t =  taskFactory.create(
                 {
                     userId:"123",
-                    dateTime: createMockDateTime(1331837030)
+                    dateTime: createMockDateTime(1331837030),
+                    uniqueIdGenerator: createMockUniqueIdGenerator()
                 }
             );
             assert(t.wasBorn() === 1331837030);

@@ -1,24 +1,32 @@
 function createTask(params){
-    
-    var dateTime = params.dateTime;
+
+    var validateParams = function(){
+        if (params.userId === undefined || 
+            params.dateTime === undefined ||
+            params.uniqueIdGenerator === undefined){
+            throw "Inavlid params";
+        }
+    }
+
     var creationTimeStamp = 0;
+    var id = 0;
+
     
     var setCreationTimeStamp = function(){
-        creationTimeStamp =  dateTime.now();
+        creationTimeStamp =  params.dateTime.now();
+    }
+
+    var setUniqueId = function(){
+        id =  params.uniqueIdGenerator.getId();
     }
     
     var wasBorn =  function(){
         return creationTimeStamp;
     }
 
-    var validateParams = function(){
-        if (params.userId === undefined || params.dateTime === undefined){
-            throw "Inavlid params";
-        }
-    }
-    
     var init = function(){
         validateParams();
+        setUniqueId();
         setCreationTimeStamp();
     }
     
