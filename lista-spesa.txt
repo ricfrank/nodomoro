@@ -19,7 +19,10 @@ per vedere la configurazione vim ~/.gitconfig
 Installare node:
 https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 
-Installare npm:
+Video tutorial su node : 
+http://www.ustream.tv/recorded/10916417
+
+Installare npm (node packet manager):
 http://npmjs.org/doc/README.html
 (per linux eseguire il comando curl http://npmjs.org/install.sh | sh) con utente root.
 npm docs :  http://npmjs.org/doc
