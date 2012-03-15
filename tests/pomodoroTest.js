@@ -4,13 +4,14 @@ function wru(wru){var assert=wru.assert,async=wru.async,log=wru.log;
 // enojy your tests!
 
 
+var MODEL_PATH = "../model/pomodoro";
 
 wru.test([
     {
         name: "Can create a pomodoro",
         test: function () {
             //Arrange
-            var pomodoroFactory = require('../pomodoro');
+            var pomodoroFactory = require(MODEL_PATH);
             //Act
             var p = pomodoroFactory.create({});
             //Assert
@@ -21,7 +22,7 @@ wru.test([
         name: "Fresh pomodoro should have 1 sec duration by default",
         test: function () {
             //Arrange
-            var pomodoroFactory = require('../pomodoro');
+            var pomodoroFactory = require(MODEL_PATH);
             //Act
             var p = pomodoroFactory.create({});
             //Assert
@@ -32,7 +33,7 @@ wru.test([
         name: "Pomodoro duration can be assigned at construction time",
         test: function () {
             //Arrange
-            var pomodoroFactory = require('../pomodoro');
+            var pomodoroFactory = require(MODEL_PATH);
             //Act
             var p = pomodoroFactory.create({
                 duration : 2000
@@ -45,7 +46,7 @@ wru.test([
         name: "Pomodoro duration should be approximated to seconds",
         test: function () {
             //Arrange
-            var pomodoroFactory = require('../pomodoro');
+            var pomodoroFactory = require(MODEL_PATH);
             //Act
             var p = pomodoroFactory.create({
                 duration : 4230
@@ -58,7 +59,7 @@ wru.test([
         name: "Fresh pomodoro is not running",
         test: function () {
             //Arrange
-            var pomodoroFactory = require('../pomodoro');
+            var pomodoroFactory = require(MODEL_PATH);
             //Act
             var p = pomodoroFactory.create({});
             //Assert
@@ -69,7 +70,7 @@ wru.test([
         name: "Fresh pomodoro can't be already finished",
         test: function () {
             //Arrange
-            var pomodoroFactory = require('../pomodoro');
+            var pomodoroFactory = require(MODEL_PATH);
             //Act
             var p = pomodoroFactory.create({});
             //Assert
@@ -80,7 +81,7 @@ wru.test([
         name: "Can start a pomodoro",
         test: function () {
             //Arrange
-            var pomodoroFactory = require('../pomodoro');
+            var pomodoroFactory = require(MODEL_PATH);
             var p = pomodoroFactory.create({});
             //Act
             p.start();
@@ -90,7 +91,7 @@ wru.test([
         name: "Pomodoro should stop himself after a given time",
         test: function () {
             //Arrange
-            var pomodoroFactory = require('../pomodoro');
+            var pomodoroFactory = require(MODEL_PATH);
             var p = pomodoroFactory.create({});
             //Act
             p.start(async(function(){
