@@ -15,10 +15,13 @@ function wru(wru){var assert=wru.assert,async=wru.async,log=wru.log;
         }       
     };
     
-    var mockDateTime = {
-        now : function(){
-            return 1331837030;
-        }
+    var createMockDateTime = function(timestamp){
+        var dateTime = {
+            now : function(){
+                return timestamp;
+            }
+        };
+        return dateTime;
     }
 
 wru.test([
@@ -40,30 +43,38 @@ wru.test([
     {
         name: "Task shoud be created with userId and dateTime object",
         test: function () {
-            canCreateWithParams({userId:"1234",dateTime: mockDateTime});
+            canCreateWithParams(
+                {
+                    userId:"1234",
+                    dateTime: createMockDateTime(1234)
+                }
+            );
             
         }
     },
     {
         name: "Task can be created with description",
         test: function () {
-            canCreateWithParams({userId:"1123323",dateTime: mockDateTime,description:"Bla bla bla"});
+            canCreateWithParams(
+                {
+                    userId:"1123323",
+                    dateTime:createMockDateTime(1234),
+                    description:"Bla bla bla"
+                }
+            );
             
         }
     },
-{
+    {
         name: "Newly created task should have a creation timestamp",
         test: function(){
             var taskFactory = require('../model/task');
             var t =  taskFactory.create(
-            {
-                userId:"123",
-                dateTime: {
-                    now : function(){
-                        return 1331837030;
-                    }
+                {
+                    userId:"123",
+                    dateTime: createMockDateTime(1331837030)
                 }
-            });
+            );
             assert(t.wasBorn() === 1331837030);
         }
     }

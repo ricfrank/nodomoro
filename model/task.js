@@ -9,12 +9,16 @@ function createTask(params){
     
     var wasBorn =  function(){
         return creationTimeStamp;
-    } 
+    }
+
+    var validateParams = function(){
+        if (params.userId === undefined || params.dateTime === undefined){
+            throw "Inavlid params";
+        }
+    }
     
     var init = function(){
-        if (params.userId === undefined){
-            throw "User Id needed.";
-        }
+        validateParams();
         setCreationTimeStamp();
     }
     
