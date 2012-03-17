@@ -1,19 +1,15 @@
-var token = 0;
-var publishers = [];
+var channels = {};
 
-function register(name){
-	token += 1;
-	var publisher = {
-		name: name
-	}
-	publishers[token] = publisher;
-	return token
+function register_channel(name){
+	channels[name] = {
+		name : name
+	};
 }
 
-function log(message, token) {
-    console.log("[" + publishers[token].name + token+"] " + message);
+function log(message, channel) {
+    console.log("[" + channels[channel].name + "] " + message);
 }
 
 
 exports.log = log;
-exports.register = register;
+exports.register_channel = register_channel;

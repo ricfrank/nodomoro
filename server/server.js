@@ -6,7 +6,7 @@ var url = require("url");
 *  - route: route function
 *  - handle: handler function
 *  - logger: logger object
-*  - logger_token: logger token to publish somerthing on logger
+*  - logger_channels: list of logger channels
 *  - port: listen port, (default 8888)
 */
 function start(params) {
@@ -14,7 +14,7 @@ function start(params) {
     
     function onRequest(request, response){
         var pathname = url.parse(request.url).pathname;
-        params.logger.log("Request received: " + params.pathname, params.logger_token);
+        params.logger.log("Request received: " + params.pathname, params.logger_channels.server);
         params.route(
             {
                 handle: params.handle,
@@ -22,12 +22,12 @@ function start(params) {
                 response: response,
                 request: request,
                 logger : params.logger,
-                logger_token : params.logger.register("ROUTER")
+                logger_channels : params.logger_channels
             });
     }
 
     http.createServer(onRequest).listen(8888);
-    params.logger.log("Server started", params.logger_token);
+    params.logger.log("Server started", params.logger_channels.server);
 }
 
 exports.start = start;

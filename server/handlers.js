@@ -2,10 +2,10 @@
 * Params:
 *  - response: response object
 *  - logger: logger object
-*  - logger_token: logger token to publish somerthing on logger
+*  - logger_channels: logger channels
 */
 function init(params) {
-  params.logger.log("Request handler 'start' was called.",params.logger_token);
+  params.logger.log("Request handler 'start' was called.", params.logger_channels.handler);
   var responseMessage = "NodoMoro (TM)";
   params.response.writeHead(200, {"Content-Type": "text/html"});
   params.response.write(responseMessage);
