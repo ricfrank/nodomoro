@@ -1,23 +1,16 @@
-function start(handle) {
+var http = require("http");
+var url = require("url");
 
-    var app = require('express').createServer();
+function start(route, handle) {
+    function onRequest(request, response){
+        var pathname = url.parse(request.url).pathname;
+        var postData = "";
+        console.log("Request for "+pathname+" received.");
+        route(handle, pathname, response, request);
+    }
 
-    app.get('/', function(req, res){
-        res.send('hello world');
-    });
-
-    app.get('/pomodoro/:id', function(req, res){
-        res.send('Pomodoro id: ' + req.params.id);
-    });
-
-    app.post('/pomodoro', function(req, res){
-        res.send('Pomodoro creato ' + req.params.id);
-             
-    });
-
-    app.listen(3000);
-    
-    console.log("Server has started.");
+    http.createServer(onRequest).listen(8888);
+    console.log("Server has started."); 
 }
 
 exports.start = start;

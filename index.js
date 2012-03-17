@@ -1,14 +1,14 @@
-var path = require('path');
-
 var APP_PATH = {
-	SERVER: "./server",
-	MODEL: "./model"
+	SERVER: "./server/",
+	MODEL: "./model/"
+};
+
+var server   = require(APP_PATH.SERVER + "server");
+var router   = require(APP_PATH.SERVER + "router");
+var handlers = require(APP_PATH.SERVER + "requestHandlers");
+
+var handle = {
+	"/": handlers.init
 }
 
-var server = require(path.join(APP_PATH.SERVER, "server"));
-var requestHandlers = require(path.join(APP_PATH.MODEL,"requestHandlers"));
-
-var handle = {}
-
-//server.start(router.route, handle);
-server.start(handle);
+server.start(router.route, handle);
