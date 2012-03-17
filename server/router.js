@@ -1,12 +1,27 @@
-function route(handle, pathname, response, request) {
-	console.log("About to route a request for " + pathname);
-	if (typeof handle[pathname] === 'function') {
-		handle[pathname](response, request);
+/*
+* Params:
+*  - handle: handler function
+*  - pathname: request path
+*  - request: request object
+*  - response: response object
+*  - logger: logger object
+*  - logger_token: token to publish in logger
+*/
+function route(params){
+	var logger_token =  params.logger.register("SERVER");
+	params.logger.log("About to route a request for " + params.pathname, params.logger_token);
+	if (typeof params.handle[params.pathname] === 'function') {
+		params.handle[params.pathname](
+		{
+			response     : params.response,
+			logger       : params.logger,
+			logger_token : params.logger.register("HANDLER " + params.pathname)
+		});
 	} else {
-		console.log("No request handler for " + pathname);
-		response.writeHead(404, {"Content-Type":"text/html"});
-		response.write("404 Not Found");
-		response.end();
+		params.logger.log("No request handler for " + params.pathname, params.logger_token);
+		params.response.writeHead(404, {"Content-Type":"text/html"});
+		params.response.write("404 Not Found");
+		params.response.end();
 	}
 }
 

@@ -1,17 +1,19 @@
 var token = 0;
-var subscribers = [];
+var publishers = [];
 
-function subscribe(name){
-	var subscriber = {
+function register(name){
+	token += 1;
+	var publisher = {
 		name: name
 	}
-	subscribers[token] = subscriber;
+	publishers[token] = publisher;
 	return token
 }
 
 function log(message, token) {
-    console.log("[" + subscribers[token].name + "] " + message);
+    console.log("[" + publishers[token].name + token+"] " + message);
 }
 
+
 exports.log = log;
-exports.subscribe = subscribe;
+exports.register = register;
