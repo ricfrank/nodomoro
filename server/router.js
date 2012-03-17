@@ -8,7 +8,12 @@
 *  - logger_channels: token to publish in logger
 */
 function route(params){
-	params.logger.log("About to route a request for " + params.pathname, params.logger_channels.router);
+	
+	var log  =  function(message){
+		params.logger.log(message, params.logger_channels.router);
+	};
+
+	log("About to route a request for " + params.pathname);
 	if (typeof params.handle[params.pathname] === 'function') {
 		params.handle[params.pathname](
 		{
@@ -17,7 +22,7 @@ function route(params){
 			logger_channels : params.logger_channels
 		});
 	} else {
-		params.logger.log("No request handler for " + params.pathname, params.logger_channels.router);
+		log("No request handler for " + params.pathname);
 		params.response.writeHead(404, {"Content-Type":"text/html"});
 		params.response.write("404 Not Found");
 		params.response.end();

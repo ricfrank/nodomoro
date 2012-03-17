@@ -10,11 +10,14 @@ var url = require("url");
 *  - port: listen port, (default 8888)
 */
 function start(params) {
-
     
+    var log = function(message) {
+        params.logger.log(message, params.logger_channels.server);
+    }
+
     function onRequest(request, response){
         var pathname = url.parse(request.url).pathname;
-        params.logger.log("Request received: " + params.pathname, params.logger_channels.server);
+        log("Request received: " + params.pathname);
         params.route(
             {
                 handle: params.handle,
@@ -27,7 +30,7 @@ function start(params) {
     }
 
     http.createServer(onRequest).listen(8888);
-    params.logger.log("Server started", params.logger_channels.server);
+    log("Server started");
 }
 
 exports.start = start;
