@@ -13,8 +13,8 @@ function route(params){
 		params.logger.info(message, params.logger_channels.router);
 	};
 
-	var warn  =  function(message){
-		params.logger.warn(message, params.logger_channels.router);
+	var err  =  function(message){
+		params.logger.err(message, params.logger_channels.router);
 	};
 
 	info("About to route a request for " + params.pathname);
@@ -26,7 +26,7 @@ function route(params){
 			logger_channels : params.logger_channels
 		});
 	} else {
-		warn("No request handler for " + params.pathname);
+		err("No request handler for " + params.pathname);
 		params.response.writeHead(404, {"Content-Type":"text/html"});
 		params.response.write("404 Not Found");
 		params.response.end();

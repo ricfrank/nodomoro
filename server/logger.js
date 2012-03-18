@@ -27,8 +27,8 @@ function colorize(message, level){
 	return colortags.open[levelsColor[level]] + message + colortags.close[levelsColor[level]]
 }
 
-function createChannelTag(channel){
-	return "[" + channels[channel].name + "] ";
+function createChannelTag(channel,level){
+	return colorize("[",level) + channels[channel].name + colorize("] ",level);
 }
 
 function register_channel(name){
@@ -38,7 +38,7 @@ function register_channel(name){
 }
 
 function log(message, channel, level) {
-    console.log(colorize(createChannelTag(channel), level) + message);
+    console.log(createChannelTag(channel, level) + message);
 }
 
 function err(message, channel){
