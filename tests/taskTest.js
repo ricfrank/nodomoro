@@ -91,6 +91,21 @@ wru.test([
             );
             assert(t.wasBorn() === 1331837030);
         }
+    },
+    {
+        name: "Task should be able to stringify himself",
+        test: function(){
+            var taskFactory = require('../model/task');
+            var t =  taskFactory.create(
+                {
+                    userId:"123",
+                    dateTime: createMockDateTime(1331837030),
+                    uniqueIdGenerator: createMockUniqueIdGenerator(),
+                    description: "Task description"
+                }
+            );
+            assert(t.stringify() !== undefined);
+        }
     }
 ]);
 
