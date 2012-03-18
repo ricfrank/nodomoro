@@ -16,15 +16,17 @@ function start(params) {
     }
 
     function onRequest(request, response){
+        var method = request.method;
         var pathname = url.parse(request.url).pathname;
-        info("Request received: " + params.pathname);
+        info(method + " " + pathname);
         params.route(
             {
-                handle: params.handle,
-                pathname: pathname,
-                response: response,
-                request: request,
-                logger : params.logger,
+                handle          : params.handle,
+                pathname        : pathname,
+                method          : method,
+                response        : response,
+                request         : request,
+                logger          : params.logger,
                 logger_channels : params.logger_channels
             });
     }
