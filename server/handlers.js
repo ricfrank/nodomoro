@@ -14,11 +14,11 @@ function init(params) {
   params.response.end();
 }
 
-var tasks = {};
+var tasksDto = [];
 
 function getTasks(params) {
 	params.response.writeHead(200, {"Content-Type": "application/json"});
-  	params.response.write(JSON.stringify(tasks));
+  	params.response.write(JSON.stringify(tasksDto));
  	params.response.end();
 }
 
@@ -49,12 +49,12 @@ function createTask(params) {
 			uniqueIdGenerator: generator
 		}
 	);
-	tasks[currentId] = tasks;
+	tasksDto.push(task.getDto());
 	params.response.writeHead(201, {
         "Content-Type": "application/json",
         "Location": "http://localhost:8888/tasks/"+currentId
     });
-    params.response.write(task.stringify());
+    params.response.write(JSON.stringify(task.getDto()));
     params.response.end(); 
 
 }

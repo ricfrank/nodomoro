@@ -36,15 +36,15 @@ function createTask(params){
         setCreationTimeStamp();
     }
 
-    var stringify = function(){
-        return JSON.stringify(
-            {
-                id: _id,
-                userId: _userId,
-                creationTimestamp : _creationTimeStamp,
-                description : _description
-            }
-        );
+    var getDto = function(){
+        var dto = {
+            id: _id,
+            userId: _userId,
+            creationTimestamp : _creationTimeStamp,
+            description : _description
+        };
+        return dto;
+            
     }
     
     
@@ -52,7 +52,7 @@ function createTask(params){
     var task = {};
     init();
     task.wasBorn = wasBorn;
-    task.stringify = stringify;
+    task.getDto = getDto;
     return task;
 }
 

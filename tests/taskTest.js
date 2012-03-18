@@ -93,7 +93,7 @@ wru.test([
         }
     },
     {
-        name: "Task should be able to stringify himself",
+        name: "Task should be able to expose a dto of his internal state",
         test: function(){
             var taskFactory = require('../model/task');
             var t =  taskFactory.create(
@@ -104,7 +104,7 @@ wru.test([
                     description: "Task description"
                 }
             );
-            assert(t.stringify() !== undefined);
+            assert(t.getDto() !== undefined);
         }
     }
 ]);
