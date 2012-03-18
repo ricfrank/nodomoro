@@ -91,21 +91,22 @@ wru.test([
             );
             assert(t.wasBorn() === 1331837030);
         }
-    }
-    /*
+    },
     {
-        name: "Pomodoro should stop himself after a given time",
-        test: function () {
-            //Arrange
-            var pomodoroFactory = require('../pomodoro');
-            var p = pomodoroFactory.create({});
-            //Act
-            p.start(async(function(){
-                //Assert
-                assert(p.isFinished() === true);
-            }));
+        name: "Task should be able to expose a dto of his internal state",
+        test: function(){
+            var taskFactory = require('../model/task');
+            var t =  taskFactory.create(
+                {
+                    userId:"123",
+                    dateTime: createMockDateTime(1331837030),
+                    uniqueIdGenerator: createMockUniqueIdGenerator(),
+                    description: "Task description"
+                }
+            );
+            assert(t.getDto() !== undefined);
         }
-    }*/
+    }
 ]);
 
 

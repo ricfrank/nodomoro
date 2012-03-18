@@ -20,7 +20,13 @@ logger.register_channel(logger_channels.handler);
 
 
 var handle = {
-	"/": handlers.init
+	"/": {
+		"GET" : handlers.init
+	},
+	"/tasks" : {
+		"GET"  : handlers.getTasks,
+		"POST" : handlers.createTask
+	}
 }
 
 server.start(
