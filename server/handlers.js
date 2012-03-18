@@ -12,4 +12,12 @@ function init(params) {
   params.response.end();
 }
 
-exports.init = init;
+function getTasks(params) {
+	var responseMessage = "<ul><li>Buy milk</li><li>Make bread</li><li>Play with NodeJS</li></ul>";
+	params.response.writeHead(200, {"Content-Type": "text/html"});
+  	params.response.write(responseMessage);
+ 	params.response.end();
+}
+
+exports.init 	 = init;
+exports.getTasks = getTasks;
