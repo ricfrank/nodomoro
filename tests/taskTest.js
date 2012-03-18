@@ -92,20 +92,6 @@ wru.test([
             assert(t.wasBorn() === 1331837030);
         }
     }
-    /*
-    {
-        name: "Pomodoro should stop himself after a given time",
-        test: function () {
-            //Arrange
-            var pomodoroFactory = require('../pomodoro');
-            var p = pomodoroFactory.create({});
-            //Act
-            p.start(async(function(){
-                //Assert
-                assert(p.isFinished() === true);
-            }));
-        }
-    }*/
 ]);
 
 
