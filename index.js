@@ -1,8 +1,32 @@
-var server = require("./server");
-var requestHandlers = require("./requestHandlers");
+var APP_PATH = {
+	SERVER: "./server/",
+	MODEL: "./model/"
+};
 
-var handle = {}
+var server   = require(APP_PATH.SERVER + "server");
+var router   = require(APP_PATH.SERVER + "router");
+var handlers = require(APP_PATH.SERVER + "handlers");
+var logger   = require(APP_PATH.SERVER + "logger");
 
-//server.start(router.route, handle);
-server.start(handle);
-    
+var logger_channels = {
+	server : "SERVER",
+	router : "ROUTER",
+	handler: "HANDLER"
+}
+
+logger.register_channel(logger_channels.server);
+logger.register_channel(logger_channels.router);
+logger.register_channel(logger_channels.handler);
+
+
+var handle = {
+	"/": handlers.init
+}
+
+server.start(
+	{
+		route:router.route,
+		handle: handle,
+		logger: logger,
+		logger_channels: logger_channels
+	});
