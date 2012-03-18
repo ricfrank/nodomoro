@@ -5,7 +5,7 @@
 *  - logger_channels: logger channels
 */
 function init(params) {
-  params.logger.log("Request handler 'start' was called.", params.logger_channels.handler);
+  params.logger.debug("Request handler 'start' was called.", params.logger_channels.handler);
   var responseMessage = "NodoMoro (TM)";
   params.response.writeHead(200, {"Content-Type": "text/html"});
   params.response.write(responseMessage);

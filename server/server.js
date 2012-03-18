@@ -11,13 +11,13 @@ var url = require("url");
 */
 function start(params) {
     
-    var log = function(message) {
-        params.logger.log(message, params.logger_channels.server);
+    var info = function(message) {
+        params.logger.info(message, params.logger_channels.server);
     }
 
     function onRequest(request, response){
         var pathname = url.parse(request.url).pathname;
-        log("Request received: " + params.pathname);
+        info("Request received: " + params.pathname);
         params.route(
             {
                 handle: params.handle,
@@ -30,7 +30,7 @@ function start(params) {
     }
 
     http.createServer(onRequest).listen(8888);
-    log("Server started");
+    info("Server started");
 }
 
 exports.start = start;

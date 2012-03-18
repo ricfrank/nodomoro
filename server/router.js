@@ -9,11 +9,15 @@
 */
 function route(params){
 	
-	var log  =  function(message){
-		params.logger.log(message, params.logger_channels.router);
+	var info  =  function(message){
+		params.logger.info(message, params.logger_channels.router);
 	};
 
-	log("About to route a request for " + params.pathname);
+	var warn  =  function(message){
+		params.logger.warn(message, params.logger_channels.router);
+	};
+
+	info("About to route a request for " + params.pathname);
 	if (typeof params.handle[params.pathname] === 'function') {
 		params.handle[params.pathname](
 		{
@@ -22,7 +26,7 @@ function route(params){
 			logger_channels : params.logger_channels
 		});
 	} else {
-		log("No request handler for " + params.pathname);
+		warn("No request handler for " + params.pathname);
 		params.response.writeHead(404, {"Content-Type":"text/html"});
 		params.response.write("404 Not Found");
 		params.response.end();
