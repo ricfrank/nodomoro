@@ -11,26 +11,28 @@ var url = require("url");
 */
 function start(params) {
     
-    var log = function(message) {
-        params.logger.log(message, params.logger_channels.server);
+    var info = function(message) {
+        params.logger.info(message, params.logger_channels.server);
     }
 
     function onRequest(request, response){
+        var method = request.method;
         var pathname = url.parse(request.url).pathname;
-        log("Request received: " + params.pathname);
+        info(method + " " + pathname);
         params.route(
             {
-                handle: params.handle,
-                pathname: pathname,
-                response: response,
-                request: request,
-                logger : params.logger,
+                handle          : params.handle,
+                pathname        : pathname,
+                method          : method,
+                response        : response,
+                request         : request,
+                logger          : params.logger,
                 logger_channels : params.logger_channels
             });
     }
 
     http.createServer(onRequest).listen(8888);
-    log("Server started");
+    info("Server started");
 }
 
 exports.start = start;
