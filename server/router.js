@@ -8,17 +8,21 @@
 *  - logger: logger object
 *  - logger_channels: token to publish in logger
 */
-
-
 function route(params){
 	
+	var canHandlePath = function(path){
+		return params.handle[path] !== undefined;
+	}
+
+	var canHandleMethod = function(path, method){
+		return params.handle[path][method] !== undefined;
+	}
+
 	var canHandle = function(path, method){
-		if (params.handle[path] === undefined){
-			return false;
-		} else if (typeof params.handle[path][method] !== 'function') {
-			return false;
-		}
-		return true;
+		return (
+			canHandlePath(path) &&
+			canHandleMethod(path, method)
+		);
 	}
 
 	var info  =  function(message){
@@ -29,21 +33,39 @@ function route(params){
 		params.logger.err(message, params.logger_channels.router);
 	};
 
-	info( params.method + " " + params.pathname);
+	var callRealHandler =  function(path, method, handleParams){
+		params.handle[path][method](handleParams);
+	}
 
-	if (canHandle(params.pathname, params.method)) {
-		params.handle[params.pathname][params.method](
+	var callErrorHandler =  function(path, method, handleParams){
+		var errorMessage = "No route: " + method + " " + path;
+		err(errorMessage);
+		params.response.writeHead(404, {"Content-Type":"application/json"});
+		params.response.write(errorMessage);
+		params.response.end();
+	}
+
+	var safeHandle = function(path, method, handleParams){
+		var handle = canHandle(path, method) ?
+						function(){
+							callRealHandler(path, method, handleParams);
+						} :
+						function(){
+							callErrorHandler(path, method, handleParams);
+						};
+		handle();
+	}
+
+	safeHandle(
+		params.pathname,
+		params.method,
 		{
 			response        : params.response,
 			logger          : params.logger,
 			logger_channels : params.logger_channels
-		});
-	} else {
-		err("No route: " + params.method + " " + params.pathname);
-		params.response.writeHead(404, {"Content-Type":"text/html"});
-		params.response.write("404 Not Found");
-		params.response.end();
-	}
+		}
+	)
+	info( params.method + " " + params.pathname);
 }
 
 exports.route = route;
