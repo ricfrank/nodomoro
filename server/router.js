@@ -9,13 +9,21 @@
 *  - logger_channels: token to publish in logger
 */
 function route(params){
+
+	var isFunction = function(object){
+		return (typeof object === 'function');
+	}
+
+	var notFunction = function(object){
+		return  !isFunction(object);
+	}
 	
 	var canHandlePath = function(path){
 		return params.handle[path] !== undefined;
 	}
 
 	var canHandleMethod = function(path, method){
-		return params.handle[path][method] !== undefined;
+		return isFunction(params.handle[path][method]);
 	}
 
 	var canHandle = function(path, method){
