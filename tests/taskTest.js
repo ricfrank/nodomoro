@@ -106,6 +106,28 @@ wru.test([
             );
             assert(t.getDto() !== undefined);
         }
+    },
+    {
+        name: "Task should notyfy its creation to external observers",
+        test: function(){
+            var taskFactory = require('../model/task');
+            
+            var _observerCbCalled = false;
+            var observerCb = function(data){
+                _observerCbCalled =  true;
+            };
+            
+            var t =  taskFactory.create(
+                {
+                    userId:"123",
+                    dateTime: createMockDateTime(1331837030),
+                    uniqueIdGenerator: createMockUniqueIdGenerator(),
+                    description: "Task description",
+                    onTaskCreated: observerCb
+                }
+            );
+            assert(_observerCbCalled);
+        }
     }
 ]);
 

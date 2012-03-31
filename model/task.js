@@ -12,6 +12,7 @@ function createTask(params){
     var _id = 0;
     var _description = params.description ? params.description : "";
     var _userId = "";
+    var _taskCreatedObservers = [];
 
     var setUserId = function() {
         _userId = params.userId;
@@ -24,6 +25,12 @@ function createTask(params){
     var setUniqueId = function(){
         _id =  params.uniqueIdGenerator.getId();
     }
+
+    var addTaskCreatedObserver =  function(){
+        if (typeof params.onTaskCreated === 'function'){
+            _taskCreatedObservers.push(params.onTaskCreated);
+        };
+    }
     
     var wasBorn =  function(){
         return _creationTimeStamp;
@@ -34,6 +41,13 @@ function createTask(params){
         setUniqueId();
         setUserId();
         setCreationTimeStamp();
+        addTaskCreatedObserver();
+    }
+
+    var notifyTaskCreated =  function(){
+        for (index in _taskCreatedObservers){
+            _taskCreatedObservers[index](getDto());
+        };
     }
 
     var getDto = function(){
@@ -51,6 +65,7 @@ function createTask(params){
     
     var task = {};
     init();
+    notifyTaskCreated();
     task.wasBorn = wasBorn;
     task.getDto = getDto;
     return task;

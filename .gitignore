@@ -5,3 +5,4 @@
 *.swp
 *.out
 *.log
+./data/db.txt

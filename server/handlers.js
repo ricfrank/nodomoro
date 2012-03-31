@@ -1,3 +1,5 @@
+var fs =  require('fs')
+
 /*
 * Params:
 *  - response: response object
@@ -41,14 +43,36 @@ var generator = {
 
 var userId = "1234";
 
+var TASK_FILEPATH = './data/db.txt';
+var targetFilestream = fs.createWriteStream(
+  TASK_FILEPATH,
+  {
+    flags:'a+',
+    encoding:null,
+    mode:0666
+  }
+);
+
+
+
 function createTask(params) {
+
+  var onTaskCreated = function(data){
+    targetFilestream.write(JSON.stringify(data));
+    params.logger.debug("Writing: "+ data, params.logger_channels.handler);
+  };
+
 	var task = taskFactory.create(
 		{
 			userId: userId,
 			dateTime: dateTime,
-			uniqueIdGenerator: generator
+			uniqueIdGenerator: generator,
+      onTaskCreated: onTaskCreated
 		}
 	);
+
+
+
 	tasksDto.push(task.getDto());
 	params.response.writeHead(201, {
         "Content-Type": "application/json",
