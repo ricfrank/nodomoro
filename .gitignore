@@ -5,4 +5,5 @@
 *.swp
 *.out
 *.log
-./data/db.txt
+data/db.txt
+node_modules/*
