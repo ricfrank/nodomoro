@@ -1,19 +1,5 @@
 // https://github.com/WebReflection/wru
 function wru(wru){var assert=wru.assert,async=wru.async,log=wru.log;
-
-// enojy your tests!
-
-    var canCreateWithParams = function(params){
-        //Arrange
-        var taskFactory = require('../model/task');
-        //Act
-        try{
-            var task = taskFactory.create(params);
-            wru.assert(true);
-        } catch (ex){
-            wru.assert(false);
-        }       
-    };
     
     var createMockDateTime = function(timestamp){
         var dateTime = {
@@ -27,9 +13,9 @@ function wru(wru){var assert=wru.assert,async=wru.async,log=wru.log;
     var createMockUniqueIdGenerator = function(){
         var currentId = 0;
         var generator = {
-            getId : function(){
+            getId : function(params){
                 currentId += 1;
-                return currentId;
+                params.success(currentId);
             }
         }
         return generator;
@@ -37,28 +23,48 @@ function wru(wru){var assert=wru.assert,async=wru.async,log=wru.log;
 
 wru.test([
     {
-        name: "Can't create task without userId",
+        name: "Can't create task without userId. Task creation is async.",
         test: function () {
-            //Arrange
-            var taskFactory = require('../model/task');
-            //Act
-            try {
-                var task = taskFactory.create();
+
+            //We can't tell WRU to wait for it... it will never be called
+            var taskCreationSuccess =  function(task){
                 wru.assert(false);
-            } catch (ex) {
-                //Assert
+            };
+
+            //We tell WRU to wait for it with async
+            var taskCreationError =  async(function(error){
                 wru.assert(true);
-            }
+            });
+
+            var taskFactory = require('../model/task');
+            taskFactory.create(
+                {
+                    success: taskCreationSuccess,
+                    error  : taskCreationError
+                }
+            );
         }
     },
     {
         name: "Task shoud be created with userId and dateTime object and unique generator",
         test: function () {
-            canCreateWithParams(
+
+            var taskCreationSuccess =  async(function(task){
+                wru.assert(true);
+            });
+
+            var taskCreationError =  function(error){
+                assert(false);
+            };
+
+            var taskFactory = require('../model/task');
+            taskFactory.create(
                 {
                     userId:"1234",
                     dateTime: createMockDateTime(1234),
-                    uniqueIdGenerator: createMockUniqueIdGenerator()
+                    uniqueIdGenerator: createMockUniqueIdGenerator(),
+                    success: taskCreationSuccess,
+                    error: taskCreationError
                 }
             );
             
@@ -67,12 +73,23 @@ wru.test([
     {
         name: "Task can be created with an optional description",
         test: function () {
-            canCreateWithParams(
+           var taskCreationSuccess =  async(function(task){
+                wru.assert(true);
+            });
+
+            var taskCreationError =  function(error){
+                assert(false);
+            };
+
+            var taskFactory = require('../model/task');
+            taskFactory.create(
                 {
                     userId:"1123323",
                     dateTime:createMockDateTime(1234),
                     description:"Bla bla bla",
-                    uniqueIdGenerator: createMockUniqueIdGenerator()
+                    uniqueIdGenerator: createMockUniqueIdGenerator(),
+                    success: taskCreationSuccess,
+                    error: taskCreationError
                 }
             );
             
@@ -81,52 +98,79 @@ wru.test([
     {
         name: "Newly created task should have a creation timestamp",
         test: function(){
+            var taskCreationSuccess =  async(function(task){
+                assert(task.wasBorn() === 1331837030);
+            });
+
+            var taskCreationError =  function(error){
+                assert(false);
+            };
+
             var taskFactory = require('../model/task');
-            var t =  taskFactory.create(
+            taskFactory.create(
                 {
                     userId:"123",
                     dateTime: createMockDateTime(1331837030),
-                    uniqueIdGenerator: createMockUniqueIdGenerator()
+                    uniqueIdGenerator: createMockUniqueIdGenerator(),
+                    success: taskCreationSuccess,
+                    error: taskCreationError
                 }
             );
-            assert(t.wasBorn() === 1331837030);
+            
         }
     },
     {
         name: "Task should be able to expose a dto of his internal state",
         test: function(){
-            var taskFactory = require('../model/task');
-            var t =  taskFactory.create(
-                {
-                    userId:"123",
-                    dateTime: createMockDateTime(1331837030),
-                    uniqueIdGenerator: createMockUniqueIdGenerator(),
-                    description: "Task description"
-                }
-            );
-            assert(t.getDto() !== undefined);
-        }
-    },
-    {
-        name: "Task should notyfy its creation to external observers",
-        test: function(){
-            var taskFactory = require('../model/task');
-            
-            var _observerCbCalled = false;
-            var observerCb = function(data){
-                _observerCbCalled =  true;
+            var taskCreationSuccess =  async(function(task){
+                assert(task.getDto() !== undefined);
+            });
+
+            var taskCreationError =  function(error){
+                assert(false);
             };
-            
-            var t =  taskFactory.create(
+
+            var taskFactory = require('../model/task');
+            taskFactory.create(
                 {
                     userId:"123",
                     dateTime: createMockDateTime(1331837030),
                     uniqueIdGenerator: createMockUniqueIdGenerator(),
                     description: "Task description",
-                    onTaskCreated: observerCb
+                    success: taskCreationSuccess,
+                    error: taskCreationError
                 }
             );
-            assert(_observerCbCalled);
+        }
+    },
+    {
+        name: "Task should notyfy its creation to external observers",
+        test: function(){
+            var taskCreationSuccess =  async(function(task){
+                assert(true);
+            });
+
+            var taskCreationError =  function(error){
+                assert(false);
+            };
+
+            var taskFactory = require('../model/task');
+            
+            var observerCb = async(function(data){
+                assert(true);
+            });
+            
+            taskFactory.create(
+                {
+                    userId:"123",
+                    dateTime: createMockDateTime(1331837030),
+                    uniqueIdGenerator: createMockUniqueIdGenerator(),
+                    description: "Task description",
+                    onTaskCreated: observerCb,
+                    success: taskCreationSuccess,
+                    error: taskCreationError
+                }
+            );
         }
     }
 ]);

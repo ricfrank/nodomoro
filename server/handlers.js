@@ -1,5 +1,4 @@
-var fs =  require('fs')
-
+var fs =  require('fs');
 /*
 * Params:
 *  - response: response object
@@ -35,9 +34,9 @@ var dateTime = {
 /* Unique Id generator for task creation*/
 var currentId = 0;
 var generator = {
-    getId : function(){
+    getId : function(params){
         currentId += 1;
-        return currentId;
+        params.success(currentId);
     }
 };
 
@@ -57,30 +56,39 @@ var targetFilestream = fs.createWriteStream(
 
 function createTask(params) {
 
-  var onTaskCreated = function(data){
-    targetFilestream.write(JSON.stringify(data));
-    params.logger.debug("Writing: "+ data, params.logger_channels.handler);
+  var writeToFile = function(task){
+    targetFilestream.write(JSON.stringify(task.getDto()));
+    params.logger.debug("Writing: "+ task.getDto(), params.logger_channels.handler);
   };
 
-	var task = taskFactory.create(
-		{
-			userId: userId,
-			dateTime: dateTime,
-			uniqueIdGenerator: generator,
-      onTaskCreated: onTaskCreated
-		}
-	);
-
-
-
-	tasksDto.push(task.getDto());
-	params.response.writeHead(201, {
+  var respondeToClient = function(task){
+    tasksDto.push(task.getDto());
+    params.response.writeHead(201, {
         "Content-Type": "application/json",
         "Location": "http://localhost:8888/tasks/"+currentId
     });
     params.response.write(JSON.stringify(task.getDto()));
     params.response.end(); 
+  }
 
+  var onSuccess = function (task){
+    writeToFile(task);
+    respondeToClient(task);
+  }
+
+  var onTaskcreationError = function(error){
+    params.logger.error("Unable to create Task: "+ error, params.logger_channels.handler);
+  }
+
+	taskFactory.create(
+		{
+			userId: userId,
+			dateTime: dateTime,
+			uniqueIdGenerator: generator,
+      success : onSuccess,
+      error : onTaskcreationError
+		}
+	);
 }
 
 exports.init 	 = init;
