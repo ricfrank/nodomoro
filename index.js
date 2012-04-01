@@ -6,7 +6,7 @@ var APP_PATH = {
 var server   = require(APP_PATH.SERVER + "server");
 var router   = require(APP_PATH.SERVER + "router");
 var handlers = require(APP_PATH.SERVER + "handlers");
-var logger   = require(APP_PATH.SERVER + "logger");
+var logger   = require(APP_PATH.SERVER + "nullLogger");
 
 var logger_channels = {
 	server : "SERVER",

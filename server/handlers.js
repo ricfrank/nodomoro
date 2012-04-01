@@ -1,4 +1,6 @@
 var fs =  require('fs');
+var redis =  require('redis');
+var redis_client =  redis.createClient();
 /*
 * Params:
 *  - response: response object
@@ -40,6 +42,14 @@ var generator = {
     }
 };
 
+var redisTaskIdGenerator = {
+  getId : function(params){
+    redis_client.incr("tasks:nextId", function(err, id){
+      params.success(id);
+    })
+  }
+}
+
 var userId = "1234";
 
 var TASK_FILEPATH = './data/db.txt';
@@ -61,6 +71,11 @@ function createTask(params) {
     params.logger.debug("Writing: "+ task.getDto(), params.logger_channels.handler);
   };
 
+  var writeToRedis =  function(task){
+    var taskDto = task.getDto();
+    redis_client.set("tasks:"+taskDto.id, JSON.stringify(taskDto));
+  }
+
   var respondeToClient = function(task){
     tasksDto.push(task.getDto());
     params.response.writeHead(201, {
@@ -72,7 +87,8 @@ function createTask(params) {
   }
 
   var onSuccess = function (task){
-    writeToFile(task);
+    //writeToFile(task);
+    writeToRedis(task);
     respondeToClient(task);
   }
 
@@ -84,7 +100,7 @@ function createTask(params) {
 		{
 			userId: userId,
 			dateTime: dateTime,
-			uniqueIdGenerator: generator,
+			uniqueIdGenerator: redisTaskIdGenerator,
       success : onSuccess,
       error : onTaskcreationError
 		}
