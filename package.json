@@ -1,0 +1,16 @@
+{
+  "name": "nodomoro",
+  "version": "0.0.1",
+  "description": "NodeJS + Pomodoro = NodoMoro",
+  "author": "Riccardo Franconi <riccardo.franconi@gmail.com>",
+  "contributors": [ 
+    { "name": "Emanuele Rampichini", "email": "emanuele.rampichini@gmail.com" },
+    { "name": "Lorenzo Massacci", "email": "mule77@gmail.com" },
+    { "name": "Giorgio Mandolini", "email": "g.mandolini@gmail.com" }
+  ],
+  "dependencies": {
+    "redis": "0.7.1",
+    "hiredis" : "*"
+  },
+  "engine": "node >= 0.6.14"
+}
